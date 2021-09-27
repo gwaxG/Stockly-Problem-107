@@ -1,7 +1,47 @@
 #!/usr/local/bin/python
 
-def solve(network):
-    print(network, type(network))
+import sys
+import numpy as np
+
+def get_list(arr):
+    """
+    :param arr: 2D array
+    :return: 1D array without -1 values
+    """
+    l = []
+    for i, row in enumerate(arr):
+        for j, element in enumerate(row):
+            if element != -1:
+                l.append([element, i, j])
+    return l
+
+def remove_connections(net):
+    """
+    Remove redundant edges through Kruskal's algorithm.
+    :param net: full network
+    :return: network with removed edges
+    """
+    # 1 create a forest f where each vertex is a separate tree
+    f = np.zeros((len(net), len(net[0])))
+    # 2 create a set s containing all edges in the graph
+    s = get_list(net)
+    s.sort(key = lambda cell: cell[0])
+    # 3 while S is not empty and f is not spanning
+    while len(s) != 0:
+        # remove an edge with minimum weight from S
+        value, r, c = s.pop(0)
+        # if the edge connects two different trees then add it to the forest F, combining two trees in the single tree
+        if sum(f[r]) == 0:
+            f[r][c] = value
+    return f
+
+def calculate_weight(resized_net):
+    """
+    Go through network and count weight.
+    :param resized_net: network passed through Kruskal' algorithm.
+    :return: network weight
+    """
+    return np.sum(resized_net)
 
 def get_data(fname):
     """
@@ -17,14 +57,22 @@ def get_data(fname):
             for element in split_row:
                 if element != "-" and element != "-\n":
                     int_row.append(int(element))
-                elif element == "-":
+                else:
                     int_row.append(-1)
             data.append(int_row)
     return data
 
-def main():
-    net = get_data("p107_network.txt")
-    print(net)
+def main(fname):
+    """
+    Entry point of the program.
+    :fname: data file name
+    :return:
+    """
+    net = get_data(fname)
+    resized_net = remove_connections(net)
+    print(resized_net)
+    weight = calculate_weight(resized_net)
+    print(weight)
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv[1])
