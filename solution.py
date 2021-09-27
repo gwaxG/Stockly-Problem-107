@@ -12,8 +12,21 @@ def get_list(arr):
     for i, row in enumerate(arr):
         for j, element in enumerate(row):
             if element != -1:
+                # array containing edge weight and two vertices
                 l.append([element, i, j])
     return l
+
+def are_trees_different(vertices, r, c):
+    """
+    FInd out if connected vertices r and c belong to different trees in f
+    :param vertices: matrice of values
+    :param r: node A
+    :param c: node B
+    :return: are nodes r and c belong to different trees
+    """
+    if sum(vertices[r]) == 0:
+        return True
+    return False
 
 def remove_connections(net):
     """
@@ -31,7 +44,7 @@ def remove_connections(net):
         # remove an edge with minimum weight from S
         value, r, c = s.pop(0)
         # if the edge connects two different trees then add it to the forest F, combining two trees in the single tree
-        if sum(f[r]) == 0:
+        if are_trees_different(f, r,c ):
             f[r][c] = value
     return f
 
