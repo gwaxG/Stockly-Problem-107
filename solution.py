@@ -24,10 +24,6 @@ def are_trees_different(vertices, r, c):
     :param c: node 2
     :return: are nodes r and c belong to different trees
     """
-    # if sum(vertices[r]) == 0:
-    #     return True
-    # Figure out if r and c nodes are located in the same trees.
-    # We start by the node r and look for a connection to the node c.
     indexes = [r]
     mem = [r]
     while len(indexes) != 0:
